@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secure Checkout</title>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #020617;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .box {
+    background: #0f172a;
+    padding: 30px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  .price {
+    font-size: 30px;
+    font-weight: bold;
+    color: #22c55e;
+  }
+
+  .strike {
+    text-decoration: line-through;
+    opacity: 0.5;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .scarcity {
+    color: #facc15;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: none;
+  }
+
+  button {
+    width: 100%;
+    padding: 15px;
+    background: #22c55e;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background: #16a34a;
+  }
+
+  .trust {
+    margin-top: 15px;
+    font-size: 13px;
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  .guarantee-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .guarantee-title {
+    color: #22c55e;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+
+  .guarantee-text {
+    font-size: 13px;
+    color: #cbd5f5;
+    opacity: 0.9;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <!-- LOGO -->
+  <div style="text-align:center; margin-bottom:20px;">
+    <img src="logo.png.jpeg" alt="TMH Logo" style="width:60px; height:60px; border-radius:12px;">
+    <p style="margin:8px 0 0; font-size:12px; opacity:0.7;">THE MARKETING HAVEN</p>
+  </div>
+
+  <h2>Complete Your Order</h2>
+
+  <!-- PRICE -->
+  <div class="price">₦9,639</div>
+  <div class="strike">Regular Price: ₦14,639</div>
+
+  <div class="scarcity">
+    ⚠️ Limited access. Price may increase anytime
+  </div>
+
+  <!-- FORM -->
+  <input type="text" id="name" placeholder="Full Name" required>
+  <input type="email" id="email" placeholder="Email Address" required>
+  <input type="tel" id="phone" placeholder="Phone Number" required>
+
+  <button onclick="payNow()">Continue to Secure Payment →</button>
+
+  <div class="trust">
+    🔒 Secure Payment • Instant Access After Payment
+  </div>
+
+  <!-- 🔥 STRONG GUARANTEE -->
+  <div class="guarantee-box">
+    <div class="guarantee-title">
+      7-Day Risk-Free Guarantee
+    </div>
+    <div class="guarantee-text">
+      Go through the playbook. If you feel it wasn’t worth your time or didn’t give you clarity, 
+      simply reach out within 7 days and you’ll get a full refund, no questions asked.
+    </div>
+  </div>
+
+</div>
+
+<script>
+function payNow() {
+
+  const email = document.getElementById("email").value;
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+
+  if (!email || !name || !phone) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  let handler = PaystackPop.setup({
+    key: 'pk_live_bb9d07c83cbd8bc94ee9c7fb5fb95e14a35fa93b',
+
+    email: email,
+
+    // 🔥 TEST PRICE (₦100)
+    amount: 10000,
+
+    currency: "NGN",
+
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Customer Name",
+          variable_name: "customer_name",
+          value: name
+        },
+        {
+          display_name: "Phone Number",
+          variable_name: "phone_number",
+          value: phone
+        }
+      ]
+    },
+
+    callback: function(response) {
+      window.location.href = "success.html?ref=" + response.reference;
+    },
+
+    onClose: function() {
+      alert('Payment cancelled');
+    }
+  });
+
+  handler.openIframe();
+}
+</script>
+
+</body>
+</html>

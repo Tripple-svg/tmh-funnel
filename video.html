@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Class</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    /* VIDEO WRAP */
+    .video-wrapper {
+      position: relative;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    /* OVERLAY START BUTTON */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .overlay button {
+      padding: 18px 30px;
+      font-size: 18px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #ff0000, #ff4d4d);
+      border: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* TIMER */
+    .timer-box {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .time-unit {
+      background: linear-gradient(145deg, #111, #1a1a1a);
+      border: 1px solid #ff4d4d;
+      border-radius: 12px;
+      padding: 15px 10px;
+      width: 70px;
+      box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .time-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .time-label {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+  </style>
+
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <img src="logo.png.jpeg" class="logo">
+  </div>
+
+  <!-- HEADLINE -->
+  <h1>
+    Class Is Live. 
+    <span class="highlight">Pay Attention!</span>
+  </h1>
+
+  <p class="sub">
+    This is where most people realize what they've been doing wrong.
+  </p>
+
+  <!-- VIDEO SECTION -->
+  <div class="video-wrapper">
+
+    <!-- VIDEO (NO CONTROLS) -->
+    <video id="salesVideo">
+      <source src="test.mp4" type="video/mp4">
+    </video>
+
+    <!-- OVERLAY -->
+    <div class="overlay" id="overlay" onclick="startVideo()">
+      <button>▶ TAP TO START</button>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div id="ctaBox" style="display:none; margin-top: 30px;">
+
+    <h2>🚨 Your Access Is Unlocked!</h2>
+
+    <!-- TIMER -->
+    <div class="timer-box">
+      <div class="time-unit">
+        <div id="hours" class="time-number">05</div>
+        <div class="time-label">HRS</div>
+      </div>
+
+      <div class="time-unit">
+        <div id="minutes" class="time-number">00</div>
+        <div class="time-label">MIN</div>
+      </div>
+
+      <div class="time-unit">
+        <div id="seconds" class="time-number">00</div>
+        <div class="time-label">SEC</div>
+      </div>
+    </div>
+
+    <button onclick="goToCheckout()">GET ACCESS TO PLAYBOOK →</button>
+
+  </div>
+
+</div>
+
+<script>
+
+const video = document.getElementById("salesVideo");
+const overlay = document.getElementById("overlay");
+const cta = document.getElementById("ctaBox");
+
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+
+let timerStarted = false;
+
+/* START VIDEO */
+function startVideo() {
+  overlay.style.display = "none";
+  video.play();
+}
+
+/* PREVENT SEEKING */
+video.addEventListener("seeking", function() {
+  if (video.currentTime > lastTime) {
+    video.currentTime = lastTime;
+  }
+});
+
+let lastTime = 0;
+video.addEventListener("timeupdate", function () {
+
+  /* SAVE LAST VALID TIME */
+  if (!video.seeking) {
+    lastTime = video.currentTime;
+  }
+
+  /* CTA TRIGGER */
+  if (video.currentTime >= 70 && !timerStarted) {
+    cta.style.display = "block";
+    startTimer();
+    timerStarted = true;
+  }
+});
+
+/* TIMER */
+function startTimer() {
+  let time = 5 * 60 * 60;
+
+  setInterval(() => {
+    let hours = Math.floor(time / 3600);
+    let minutes = Math.floor((time % 3600) / 60);
+    let seconds = time % 60;
+
+    hoursEl.innerHTML = String(hours).padStart(2, '0');
+    minutesEl.innerHTML = String(minutes).padStart(2, '0');
+    secondsEl.innerHTML = String(seconds).padStart(2, '0');
+
+    if (time > 0) time--;
+  }, 1000);
+}
+
+function goToCheckout() {
+  window.location.href = "checkout.html";
+}
+
+</script>
+
+</body>
+</html>
